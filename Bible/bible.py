@@ -33,8 +33,8 @@ def darken_image(image_path, output_path, opacity=0.5):
 
 # Example usage
 
-darken_image("data/bg.png", "data/bg2.png", opacity=0.75)
-"""
+darken_image("data/bg.png", "data/bg2.png", opacity=0.55)"""
+
 niv={}
 kjv={}
 
@@ -925,12 +925,12 @@ def can1_b1(e):
 				if sel_chapter-1>0:
 					sel_chapter-=1
 				else:
-					v=books2.index(sel_book)
+					v=books.index(sel_book)
 
 					if not v==0:
 
 						try:
-							sel_book=books2[v-1]
+							sel_book=books[v-1]
 							sel_chapter=1
 						except:
 							pass
@@ -949,11 +949,11 @@ def can1_b1(e):
 				if sel_chapter+1<=len(book[sel_book]):
 					sel_chapter+=1
 				else:
-					v=books2.index(sel_book)
+					v=books.index(sel_book)
 
 
 					try:
-						sel_book=books2[v+1]
+						sel_book=books[v+1]
 						sel_chapter=1
 					except:
 						pass
