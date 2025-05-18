@@ -62,14 +62,6 @@ except:
 
 
 
-try:
-
-    with open("data/save.json", "r") as file:
-        save_ = json.load(file)
-
-
-except:
-    save_={}
 
 
 
@@ -1356,7 +1348,6 @@ intro_bts=[]
 def intro2():
 	global w,h
 	global state
-	global save_
 	global can1
 	global intro_bts
 	global circle1
@@ -1375,6 +1366,14 @@ def intro2():
 
 	can1.create_image(0,0,image=bg2,anchor="nw")
 
+	try:
+
+	    with open("data/save.json", "r") as file:
+	        save_ = json.load(file)
+
+
+	except:
+	    save_={}
 
 
 	ar=[]
