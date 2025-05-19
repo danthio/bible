@@ -5,6 +5,9 @@ from PIL import Image,ImageTk,ImageDraw
 from tkinter import font
 import re
 import time
+import ctypes
+from ctypes import wintypes
+from ctypes.wintypes import RECT
 
 
 """
@@ -35,9 +38,6 @@ def darken_image(image_path, output_path, opacity=0.5):
 
 darken_image("data/bg.png", "data/bg2.png", opacity=0.6)"""
 
-im=Image.open("data/circle3.png")
-im=im.resize((28,28))
-im.save("data/circle3.png")
 
 
 niv={}
@@ -75,6 +75,21 @@ books2=[]
 
 for i in niv:
 	books.append(i)
+
+def get_taskbar_height():
+    # Get the screen dimensions
+    user32 = ctypes.windll.user32
+    screen_width = user32.GetSystemMetrics(0)
+    screen_height = user32.GetSystemMetrics(1)
+    
+    # Get the work area (excluding taskbar)
+    rect = RECT()
+    ctypes.windll.user32.SystemParametersInfoW(0x0030, 0, ctypes.byref(rect), 0)
+    
+    work_area_height = rect.bottom - rect.top
+    taskbar_height = screen_height - work_area_height
+    
+    return max(0, taskbar_height)  # Ensure no negative values
 
 
 def hex_to_rgba(hex_color, alpha):
@@ -163,6 +178,7 @@ def view_highlights():
 	can1.create_image(w-5-30,5,image=back,anchor="nw")
 
 
+	can1.create_line(0,49,w,49,fill="#ffffff")
 
 
 	can1.create_text(10,h-25,text=book_,font=("FreeMono",13),fill="#ff1f83",anchor="w")
@@ -214,7 +230,7 @@ def view_highlights():
 		_y+=30
 
 
-		txt=str(i[0].split(" ")[1].split(":")[1])+" "
+		txt=str(i[0].split("-")[1].split(":")[1])+" "
 		txt2=txt
 
 		sz=int(can2["width"])-sb_sz-50
@@ -314,9 +330,9 @@ def highlights_(v):
 
 	except:
 
-		b=v.split(" ")[0]
-		c=v.split(" ")[1].split(":")[0]
-		ve=v.split(" ")[1].split(":")[1]
+		b=v.split("-")[0]
+		c=v.split("-")[1].split(":")[0]
+		ve=v.split("-")[1].split(":")[1]
 
 
 		h_[v]={"NIV":niv[b][c][ve],"KJV":kjv[b][c][ve]}
@@ -401,7 +417,7 @@ def main():
 
 			for _ in range(n):
 					
-				ar.append([book[sel_book]["1"][str(c)],sel_book+" 1:"+str(c)])
+				ar.append([book[sel_book]["1"][str(c)],sel_book+"-1:"+str(c)])
 
 				c+=1
 
@@ -414,11 +430,11 @@ def main():
 
 			for _ in range(n):
 					
-				ar.append([book[sel_book][str(sel_chapter)][str(c)],sel_book+" "+str(sel_chapter)+":"+str(c)])
+				ar.append([book[sel_book][str(sel_chapter)][str(c)],sel_book+"-"+str(sel_chapter)+":"+str(c)])
 
 				c+=1
 	else:
-		ar.append([book[sel_book][str(sel_chapter)][str(sel_verse)],sel_book+" "+str(sel_chapter)+":"+str(sel_verse)])
+		ar.append([book[sel_book][str(sel_chapter)][str(sel_verse)],sel_book+"-"+str(sel_chapter)+":"+str(sel_verse)])
 
 
 
@@ -451,6 +467,9 @@ def main():
 
 
 	can1.create_image(w-30-5,5,image=back,anchor="nw")
+
+
+	can1.create_line(0,49,w,49,fill="#ffffff")
 
 	xx=int(can2["width"])/3
 
@@ -541,6 +560,8 @@ def main():
 		y2=_y
 
 		ar_h.append([i[1],y1,y2])
+
+
 
 		_y+=30
 
@@ -1118,6 +1139,7 @@ def sel_book_():
 	can1.create_image(w-30-5,5,image=back,anchor="nw")
 
 	#create_polygon(*[0,h-49, w,h-49, w,h, 0,h, 0,h-49], fill="#ff1f83", alpha=0.1,can=can1)
+	can1.create_line(0,49,w,49,fill="#ffffff")
 
 
 	y=10
@@ -1193,6 +1215,8 @@ def sel_chapter_():
 
 	can1.create_image(w-30-5,5,image=back,anchor="nw")
 
+	can1.create_line(0,49,w,49,fill="#ffffff")
+
 
 
 	s=90
@@ -1236,7 +1260,7 @@ def sel_chapter_():
 			can2.create_image(xx+1,y+1,image=circle3,anchor="nw")
 			can2.create_image(xx+sz-30+1,y+1,image=circle3,anchor="nw")
 
-			can2.create_rectangle(xx+15+1,y+1,xx+sz-15+1,y+30-1-1,fill="#200310",outline="#200310")
+			can2.create_rectangle(xx+15+1,y+1,xx+sz-15+1,y+30-1-1,fill="#000000",outline="#000000")
 
 
 			can2.create_text(xx+sz/2,y+15,text=str(c),font=("FreeMono",13),fill="#ff1f83")
@@ -1292,6 +1316,8 @@ def sel_verse_():
 	can1.create_text(10,25,text=sel_book+" "+str(sel_chapter) ,font=("FreeMono",20),fill="#ffffff",anchor="w")
 	can1.create_text(w/2,25,text="Select Verse" ,font=("FreeMono",20),fill="#ffffff")
 
+	can1.create_line(0,49,w,49,fill="#ffffff")
+
 	s=90
 	can1.create_image(w/2-s,h-50+(50-30)/2,image=circle1,anchor="nw")
 	can1.create_image(w/2+s-30,h-50+(50-30)/2,image=circle1,anchor="nw")
@@ -1336,7 +1362,7 @@ def sel_verse_():
 			can2.create_image(xx+1,y+1,image=circle3,anchor="nw")
 			can2.create_image(xx+sz-30+1,y+1,image=circle3,anchor="nw")
 
-			can2.create_rectangle(xx+15+1,y+1,xx+sz-15+1,y+30-1-1,fill="#200310",outline="#200310")
+			can2.create_rectangle(xx+15+1,y+1,xx+sz-15+1,y+30-1-1,fill="#000000",outline="#000000")
 
 
 
@@ -1492,7 +1518,7 @@ root=tk.Tk()
 
 w,h=1000,600
 wd,ht=root.winfo_screenwidth(),root.winfo_screenheight()
-root.geometry(str(w)+"x"+str(h)+"+"+str(int((wd-w)/2))+"+"+str(int((ht-h)/2)))
+root.geometry(str(w)+"x"+str(h)+"+"+str(int((wd-w)/2))+"+"+str(int((ht-h)/2-get_taskbar_height())))
 root.resizable(0,0)
 root.iconbitmap("data/icon.ico")
 root.title("Bible")
