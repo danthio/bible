@@ -494,8 +494,8 @@ def main():
 
 	for i in ar:
 
-		
-		i2=i[0].split(" ")
+		tt=i[0].replace("\n","")
+		i2=tt.split(" ")
 
 		y1=_y
 
@@ -527,9 +527,10 @@ def main():
 					txt+="\n"+i2[_]+" "
 					txt2="\n"+i2[_]+" "
 			except:
-				txt+=i2[_]+" "
-
-
+				if get_text_length(can2, txt2+i2[_]+" ", "FreeMono", 13)<=sz:
+					txt+=i2[_]+" "
+				else:
+					txt+="\n"+i2[_]
 
 
 		col="#ffffff"
